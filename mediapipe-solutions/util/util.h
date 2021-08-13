@@ -24,17 +24,20 @@ namespace mediapipe_solutions {
 
 inline void ThrowError(const ::absl::Status& status)
 {
+  // TODO: other codes
   switch (status.code()) {
     case absl::StatusCode::kInvalidArgument:
-      throw std::invalid_argument(status.message().data());
+      throw std::invalid_argument(std::string(status.message()));
     case absl::StatusCode::kNotFound:
-      throw std::system_error(make_error_code(std::errc::no_such_file_or_directory), status.message().data());
+      throw std::system_error(make_error_code(std::errc::no_such_file_or_directory), std::string(status.message()));
     case absl::StatusCode::kAlreadyExists:
-      throw std::system_error(make_error_code(std::errc::file_exists), status.message().data());
+      throw std::system_error(make_error_code(std::errc::file_exists), std::string(status.message()));
     case absl::StatusCode::kUnimplemented:
-      throw std::logic_error(status.message().data());
+      throw std::logic_error(std::string(status.message()));
+    case absl::StatusCode::kInternal:
+      throw std::logic_error(std::string(status.message()));
     default:
-      throw std::runtime_error(status.message().data());
+      throw std::runtime_error(std::string(status.message()));
   }
 }
 

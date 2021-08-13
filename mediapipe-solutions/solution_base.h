@@ -36,13 +36,15 @@ class SolutionBase {
 		SolutionBase(
 			mediapipe::CalculatorGraphConfig graph_config,
 			std::unordered_map<std::string, Any> &&side_inputs,
-			std::vector<std::string> outputs
+			std::vector<std::string> outputs,
+			std::unordered_map<std::string, std::any> options = {}
 		);
 
 		SolutionBase(
 			std::string_view graph_config,
 			std::unordered_map<std::string, Any> &&side_inputs,
-			std::vector<std::string> outputs
+			std::vector<std::string> outputs,
+			std::unordered_map<std::string, std::any> options = {}
 		);
 
 		void Close();
@@ -57,7 +59,8 @@ class SolutionBase {
 		void Init(
 			mediapipe::CalculatorGraphConfig graph_config,
 			std::unordered_map<std::string, Any> side_inputs,
-			std::vector<std::string> outputs
+			std::vector<std::string> outputs,
+			std::unordered_map<std::string, std::any> options
 		);
 };
 

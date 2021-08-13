@@ -65,10 +65,13 @@ class Hands : public SolutionBase {
 	public:
 		/*Hands(
 			bool static_image_mode = false, int max_num_hands = 2,
-			double min_detection_confidence = 0.5, double min_tracking_confidence = 0.5
+			float min_detection_confidence = 0.5, double min_tracking_confidence = 0.5
 		);*/
-		
-		Hands(int max_num_hands = 2);
+
+		Hands(
+			int max_num_hands = 2,
+			float min_detection_confidence = 0.5, double min_tracking_confidence = 0.5
+		);
 
 		std::unordered_map<Handedness, HandNormalizedLandmarkList> Process(std::unique_ptr<mediapipe::ImageFrame> image);
 };

@@ -16,6 +16,8 @@
 
 #include <string_view>
 
+#include "mediapipe/calculators/core/constant_side_packet_calculator.pb.h"
+
 #include "mediapipe/framework/deps/file_helpers.h"
 #include "mediapipe/framework/formats/classification.pb.h"
 
@@ -31,18 +33,15 @@ namespace {
 		side_inputs.emplace("num_hands", max_num_hands);
 		return side_inputs;
 	}
-
-	std::string ReadTextFile(
-		std::string_view file_name
-	) {
-		mediapipe::file::Exists(file_name);
 	
-		std::string graph_config_string;
-		mediapipe::file::GetContents(file_name, &graph_config_string,
-											/*read_as_binary=*/false);
-
-		return graph_config_string;
+	/*
+	google::protobuf::Message *CreateConstantSidePacket(bool value) {
+		auto result = new ConstantSidePacketCalculatorOptions::ConstantSidePacket();
+		
+		result->set_bool_value(value);
+		return result;
 	}
+	*/
 }
 
 /*
@@ -76,7 +75,11 @@ Hands::Hands(
 }
 */
 
-Hands::Hands(int max_num_hands)
+Hands::Hands(
+		//bool static_image_mode,
+		int max_num_hands,
+		float min_detection_confidence, double min_tracking_confidence
+	)
 	: SolutionBase(
 		string(
 		"input_stream: \"input_video\""
@@ -92,7 +95,21 @@ Hands::Hands(int max_num_hands)
 		"output_stream: \"HAND_ROIS_FROM_PALM_DETECTIONS:multi_palm_rects\""
 		"}"),
 		CreateSideInputs(max_num_hands),					// side_inputs
-		{ { string("landmarks"), string("handedness") } }	// outputs
+		{ { string("landmarks"), string("handedness") } },	// outputs
+		{
+			//{
+			//	"handlandmarktrackingcpu__ConstantSidePacketCalculator.packet",
+			//	CreateConstantSidePacket(!static_image_mode)
+			//},
+			{
+				"handlandmarktrackingcpu__palmdetectioncpu__TensorsToDetectionsCalculator.min_score_thresh",
+				min_detection_confidence
+			},
+			{
+				"handlandmarktrackingcpu__handlandmarkcpu__ThresholdingCalculator.threshold",
+				min_tracking_confidence
+			}
+		}
 	) {
 }
 

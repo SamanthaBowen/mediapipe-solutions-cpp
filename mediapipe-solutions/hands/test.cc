@@ -52,6 +52,74 @@ namespace
 		
 		return input_frame;
 	}
+
+	std::string_view ToStringView(HandLandmark obj) {
+		switch (obj) {
+			case HandLandmark::WRIST:
+				return "WRIST";
+				break;
+			case HandLandmark::THUMB_CMC:
+				return "THUMB_CMC";
+				break;
+			case HandLandmark::THUMB_MCP:
+				return "THUMB_MCP";
+				break;
+			case HandLandmark::THUMB_IP:
+				return "THUMB_IP";
+				break;
+			case HandLandmark::THUMB_TIP:
+				return "THUMB_TIP";
+				break;
+			case HandLandmark::INDEX_FINGER_MCP:
+				return "INDEX_FINGER_MCP";
+				break;
+			case HandLandmark::INDEX_FINGER_PIP:
+				return "INDEX_FINGER_PIP";
+				break;
+			case HandLandmark::INDEX_FINGER_DIP:
+				return "INDEX_FINGER_DIP";
+				break;
+			case HandLandmark::INDEX_FINGER_TIP:
+				return "INDEX_FINGER_TIP";
+				break;
+			case HandLandmark::MIDDLE_FINGER_MCP:
+				return "MIDDLE_FINGER_MCP";
+				break;
+			case HandLandmark::MIDDLE_FINGER_PIP:
+				return "MIDDLE_FINGER_PIP";
+				break;
+			case HandLandmark::MIDDLE_FINGER_DIP:
+				return "MIDDLE_FINGER_DIP";
+				break;
+			case HandLandmark::MIDDLE_FINGER_TIP:
+				return "MIDDLE_FINGER_TIP";
+				break;
+			case HandLandmark::RING_FINGER_MCP:
+				return "RING_FINGER_MCP";
+				break;
+			case HandLandmark::RING_FINGER_PIP:
+				return "RING_FINGER_PIP";
+				break;
+			case HandLandmark::RING_FINGER_DIP:
+				return "RING_FINGER_DIP";
+				break;
+			case HandLandmark::RING_FINGER_TIP:
+				return "RING_FINGER_TIP";
+				break;
+			case HandLandmark::PINKY_MCP:
+				return "PINKY_MCP";
+				break;
+			case HandLandmark::PINKY_PIP:
+				return "PINKY_PIP";
+				break;
+			case HandLandmark::PINKY_DIP:
+				return "PINKY_DIP";
+				break;
+			case HandLandmark::PINKY_TIP:
+				return "PINKY_TIP";
+				break;
+		}
+	}
 }
 
 int main()
@@ -66,15 +134,29 @@ int main()
 	while (true) {
 		if (auto frame = GetFrame(capture)) {
 			const auto results = hands.Process(move(frame));
-			
+
 			cout << "Frame" << endl;
-			
+
 			for (const auto &hand : results) {
-				cout << "\t" "Hand" << endl;
-				
+				switch (hand.first) {
+					case Handedness::LEFT:
+						cout << "\t" "LEFT" << endl;
+						break;
+					case Handedness::RIGHT:
+						cout << "\t" "RIGHT" << endl;
+						break;
+				}
+
 				auto landmarkList = hand.second;
-				for (const auto &landmark : landmarkList.landmark())
-					cout << "\t\t (" << landmark.x() << ", " << landmark.y() << ", " << landmark.z() << ")" << endl;
+
+				for (int i = 0; i < landmarkList.landmark_size(); ++i) {
+					const auto &landmark = landmarkList.landmark(i);
+
+					cout << "\t\t"
+						<< ToStringView(HandLandmark(i)) << " "
+						<< "(" << landmark.x() << ", " << landmark.y() << ", " << landmark.z() << ")"
+						<< endl;
+				}
 			}
 		}
 	}
