@@ -353,6 +353,6 @@ tf_workspace2()
 
 http_archive(
     name = "com_google_mediapipe",
-    urls = ["https://github.com/google/mediapipe/archive/v0.8.5.tar.gz"],
-    strip_prefix = "mediapipe-0.8.5",
+    urls = ["https://github.com/google/mediapipe/archive/v0.8.7.tar.gz"],
+    strip_prefix = "mediapipe-0.8.7",
 )
